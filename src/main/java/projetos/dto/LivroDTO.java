@@ -1,5 +1,6 @@
 package projetos.dto;
 
+import projetos.entidade.Categoria;
 import projetos.entidade.Livro;
 
 public class LivroDTO {
@@ -12,12 +13,12 @@ public class LivroDTO {
 
     private String isbn;
 
-    private String categoria;
+    private Categoria categoria;
 
     public LivroDTO() {
     }
 
-    public LivroDTO(Long id, String titulo, String edicao, String isbn, String categoria) {
+    public LivroDTO(Long id, String titulo, String edicao, String isbn, Categoria categoria) {
         this.id = id;
         this.titulo = titulo;
         this.edicao = edicao;
@@ -65,11 +66,11 @@ public class LivroDTO {
         this.isbn = isbn;
     }
 
-    public String getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
 }

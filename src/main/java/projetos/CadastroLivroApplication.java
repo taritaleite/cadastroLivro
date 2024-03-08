@@ -1,4 +1,4 @@
-package projetos.cadastroLivro;
+package projetos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

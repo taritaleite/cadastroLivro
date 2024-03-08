@@ -1,6 +1,7 @@
 package projetos.entidade;
 
 import jakarta.persistence.*;
+import projetos.dto.LivroDTO;
 
 @Entity
 @Table(name = "tb_livros")
@@ -16,17 +17,21 @@ public class Livro {
 
     private String isbn;
 
-    private String categoria;
+    @Enumerated(EnumType.STRING)
+    private Categoria categoria;
 
     public Livro() {
     }
 
-    public Livro(Long id, String titulo, String edicao, String isbn, String categoria) {
+    public Livro(Long id, String titulo, String edicao, String isbn, Categoria categoria) {
         this.id = id;
         this.titulo = titulo;
         this.edicao = edicao;
         this.isbn = isbn;
         this.categoria = categoria;
+    }
+
+    public Livro(LivroDTO livroDTO) {
     }
 
     public Long getId() {
@@ -61,11 +66,11 @@ public class Livro {
         this.isbn = isbn;
     }
 
-    public String getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
 }
