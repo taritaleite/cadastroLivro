@@ -8,5 +8,13 @@ Desenvolvimento de uma API de Cadastro de Livros para participar de um desafio t
 Java
 Maven
 Banco de Dados em Memória - H2
+Junit 5
+Mock MVC
+Mockito
+
+## Diagrama da Aplicação
+
+<img cadastroLivro="/Diagrama.png">
+
 
 ## Retornos esperados
