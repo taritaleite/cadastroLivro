@@ -1,6 +1,8 @@
 package projetos.entidade;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.ISBN;
 import projetos.dto.LivroDTO;
 
 @Entity
@@ -11,10 +13,12 @@ public class Livro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Nome obrigatório")
     private String titulo;
 
     private String edicao;
 
+    @ISBN(message = "ISBN inválido")
     private String isbn;
 
     @Enumerated(EnumType.STRING)

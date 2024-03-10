@@ -36,20 +36,42 @@ public class LivroService {
     }
 
     public LivroDTO atualizarUmLivro(Long id, LivroDTO livroDTO) {
+
         Livro livro = repositorio.findById(id)
                 .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
 
-        livro.setTitulo(livroDTO.getTitulo());
-        livro.setEdicao(livroDTO.getEdicao());
-        livro.setIsbn(livroDTO.getIsbn());
-        livro.setCategoria(livroDTO.getCategoria());
+        livro = repositorio.save(verificarAlteracaoLivro(livro, livroDTO));
 
-        livro = repositorio.save(livro);
         return new LivroDTO(livro);
     }
 
-
     public void excluirLivro(Long id) {
+
+        if (!repositorio.existsById(id)) {
+            throw new IllegalArgumentException("ID não encontrado: " + id);
+        }
+
         repositorio.deleteById(id);
+    }
+
+    private Livro verificarAlteracaoLivro(Livro livro, LivroDTO livroDTO) {
+
+        if (livroDTO.getTitulo() != null) {
+            livro.setTitulo(livroDTO.getTitulo());
+        }
+
+        if (livroDTO.getEdicao() != null) {
+            livro.setEdicao(livroDTO.getEdicao());
+        }
+
+        if (livroDTO.getIsbn() != null) {
+            livro.setIsbn(livroDTO.getIsbn());
+        }
+
+        if (livroDTO.getCategoria() != null) {
+            livro.setCategoria(livroDTO.getCategoria());
+        }
+
+        return livro;
     }
 }

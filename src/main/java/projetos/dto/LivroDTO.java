@@ -1,5 +1,8 @@
 package projetos.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import projetos.entidade.Categoria;
 import projetos.entidade.Livro;
 
@@ -7,12 +10,19 @@ public class LivroDTO {
 
     private Long id;
 
+
+    @NotBlank(message = "O título não pode estar vazio.")
+    @Size(max = 100, message = "O título não pode ter mais de 100 caracteres.")
     private String titulo;
 
+    @NotBlank(message = "A edição não pode estar vazia.")
     private String edicao;
 
+    @NotBlank(message = "O ISBN não pode estar vazio.")
+    @Size(min = 10, max = 13, message = "O ISBN deve ter entre 10 e 13 caracteres.")
     private String isbn;
 
+    @NotNull(message = "A categoria não pode ser nula.")
     private Categoria categoria;
 
     public LivroDTO() {

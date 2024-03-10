@@ -1,5 +1,6 @@
 package projetos.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,8 +11,9 @@ import projetos.service.LivroService;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/livros")
+@Valid
 public class LivroController {
 
     @Autowired
@@ -42,9 +44,17 @@ public class LivroController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarLivro(@PathVariable Long id) {
-        livroService.excluirLivro(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deletarLivro(@PathVariable Long id) {
+
+       // try {
+            livroService.excluirLivro(id);
+            return ResponseEntity.noContent().build();
+
+       // } catch (IllegalArgumentException e) {
+
+           // return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Livro não encontrado para o ID: " + id + ", digite um ID válido.");
+      //  }
+
     }
 
 }
