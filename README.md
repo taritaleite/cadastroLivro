@@ -4,6 +4,10 @@
 ## Sobre o Projeto
 Desenvolvimento de uma API de Cadastro de Livros para participar de um desafio técnico do Banco Itaú, assim como para aprimoraro conhecimento sobre Java e Spring Boot.
 
+## Diagrama da Aplicação
+
+<img cadastroLivro="/Diagrama.png">
+
 ## Tecnologias utilizadas
 Java
 Maven
