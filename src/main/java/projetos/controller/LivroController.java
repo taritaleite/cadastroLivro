@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import projetos.dto.LivroDTO;
 import projetos.service.LivroService;
@@ -27,6 +26,15 @@ public class LivroController {
         return ResponseEntity.ok(livros);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<LivroDTO> buscarLivroPorId(@PathVariable Long id) {
+
+        LivroDTO livroDTO = livroService.buscarPorId(id);
+
+        return ResponseEntity.ok(livroDTO);
+    }
+
+
     @PostMapping
     public ResponseEntity<LivroDTO> adicionarNovoLivro(@RequestBody LivroDTO livroDTO) {
 
@@ -46,14 +54,14 @@ public class LivroController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletarLivro(@PathVariable Long id) {
 
-       // try {
+        try {
             livroService.excluirLivro(id);
             return ResponseEntity.noContent().build();
 
-       // } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
 
-           // return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Livro não encontrado para o ID: " + id + ", digite um ID válido.");
-      //  }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
 
     }
 

@@ -18,7 +18,6 @@ public class Livro {
 
     private String edicao;
 
-    @ISBN(message = "ISBN inválido")
     private String isbn;
 
     @Enumerated(EnumType.STRING)

@@ -2,11 +2,13 @@ package projetos.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import projetos.dto.LivroDTO;
 import projetos.entidade.Categoria;
@@ -16,12 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(LivroController.class)
 class LivroControllerTest {
 
@@ -57,13 +58,31 @@ class LivroControllerTest {
     }
 
     @Test
+    public void buscarLivroPorId_DeveRetornarLivro() throws Exception {
+
+        Long livroId = 1L;
+        LivroDTO livroDTO = new LivroDTO(livroId, "Manual de Direito Civil - Vol. Único", "14ª", "6559649873", Categoria.DIREITO);
+        when(livroService.buscarPorId(livroId)).thenReturn(livroDTO);
+
+
+        mockMvc.perform(get("/livros/{id}", livroId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", is(livroId.intValue())))
+                .andExpect(jsonPath("$.titulo", is("Manual de Direito Civil - Vol. Único")))
+                .andExpect(jsonPath("$.edicao", is("14ª")))
+                .andExpect(jsonPath("$.isbn", is("6559649873")))
+                .andExpect(jsonPath("$.categoria", is(Categoria.DIREITO.toString())));
+    }
+
+    @Test
     public void adicionarNovoLivro_DeveRetornarLivroCriado() throws Exception {
 
-        //Simulação incluindo o Id
         LivroDTO novoLivroDTO = new LivroDTO(null, "Manual de Direito Civil", "1ª Edição", "1234567890123", Categoria.DIREITO);
         LivroDTO livroSalvoDTO = new LivroDTO(1L, "Manual de Direito Civil", "1ª Edição", "1234567890123", Categoria.DIREITO);
 
-        when(livroService.salvarNovoLivro(novoLivroDTO)).thenReturn(livroSalvoDTO);
+        when(livroService.salvarNovoLivro(any(LivroDTO.class))).thenReturn(livroSalvoDTO);
 
         mockMvc.perform(post("/livros")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -74,8 +93,8 @@ class LivroControllerTest {
                 .andExpect(jsonPath("$.edicao", is(livroSalvoDTO.getEdicao())))
                 .andExpect(jsonPath("$.isbn", is(livroSalvoDTO.getIsbn())))
                 .andExpect(jsonPath("$.categoria", is(livroSalvoDTO.getCategoria().toString())));
-
     }
+
 
     @Test
     public void atualizarUmLivro_DeveRetornarLivroAtualizado() throws Exception {
@@ -95,6 +114,25 @@ class LivroControllerTest {
                 .andExpect(jsonPath("$.edicao", is(livroAtualizadoDTO.getEdicao())))
                 .andExpect(jsonPath("$.isbn", is(livroAtualizadoDTO.getIsbn())))
                 .andExpect(jsonPath("$.categoria", is(livroAtualizadoDTO.getCategoria().toString())));
+    }
+
+    @Test
+    public void deletarLivro_Sucesso() throws Exception {
+        Long livroId = 1L;
+        doNothing().when(livroService).excluirLivro(livroId);
+
+        mockMvc.perform(delete("/livros/{id}", livroId))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deletarLivro_LivroNaoEncontrado() throws Exception {
+        Long livroId = 2L;
+        doThrow(new IllegalArgumentException("Livro não encontrado para o ID: " + livroId + " digite um ID válido"))
+                .when(livroService).excluirLivro(livroId);
+
+        mockMvc.perform(delete("/livros/{id}", livroId))
+                .andExpect(status().isNotFound());
     }
 
 }

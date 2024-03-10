@@ -22,6 +22,13 @@ public class LivroService {
         return listaLivros.stream().map(LivroDTO::new).collect(Collectors.toList());
     }
 
+    public LivroDTO buscarPorId(Long id) {
+
+        Livro livro = repositorio.findById(id).orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+
+        return new LivroDTO(livro);
+    }
+
     public LivroDTO salvarNovoLivro(LivroDTO livroDTO) {
 
         Livro livro = new Livro();
@@ -48,7 +55,7 @@ public class LivroService {
     public void excluirLivro(Long id) {
 
         if (!repositorio.existsById(id)) {
-            throw new IllegalArgumentException("ID não encontrado: " + id);
+            throw new IllegalArgumentException("Livro não encontrado para o ID: " + id + " digite um ID válido");
         }
 
         repositorio.deleteById(id);
